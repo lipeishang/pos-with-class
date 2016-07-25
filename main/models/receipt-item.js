@@ -21,24 +21,24 @@ getPrice() {
 getCount() {
   return this.cartItem.count;
   }
-    
+
     static buildReceiptItems(cartItems, allPromotions) {
         return cartItems.map(cartItem => {
 
             const promotionType = findPromotionType(cartItem.getBarcode(), allPromotions);
 
-            const {saved, subtotal} = discount(cartItem.count, cartItem.getPrice(), promotionType);
+            const {saved, subtotal} = discount(cartItem, promotionType);
 
             return new ReceiptItem(cartItem, saved, subtotal);
         });
 
-        function discount(count, price, promotionType) {
+        function discount(cartItem, promotionType) {
 
-            let subtotal = count * price;
+            let subtotal = cartItem.getSubtotal();
             let saved = 0;
 
             if (promotionType === 'BUY_TWO_GET_ONE_FREE') {
-                saved = parseInt(count / 3) * price;
+                saved = parseInt(cartItem.count / 3) * cartItem.getPrice();
             }
 
             subtotal -= saved;
